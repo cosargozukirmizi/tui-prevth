@@ -1,5 +1,5 @@
-# cli-prevth
-cli for probabilistic evolution theory solution of ordinary differential equations with multinomial right-hand-sides
+# tui-prevth
+tui for probabilistic evolution theory solution of ordinary differential equations with multinomial right-hand-sides
 
 
 This program solves the initial value problem of ordinary differential equations with multinomial right-hand-side functions. Four different initial value problems are put in the source code. The code can be manipulated to accomodate other initial value problems with multinomial right-hand-sides. 
@@ -8,7 +8,7 @@ The calculations are performed using rational arithmetic. In this way, error acc
 
 The command line interface has five sets of input. 
 
-ODE preset is for choosing the initial value problem. The ODEs are van der Pol, quartic anharmonic oscillator, Henon-Heiles and Rabinovich-Fabrikant. All initial values for all functions are taken as 1/2 (This can be changed easily within the source code, but currently not from the CLI).
+ODE preset is for choosing the initial value problem. The ODEs are van der Pol, quartic anharmonic oscillator, Henon-Heiles and Rabinovich-Fabrikant. All initial values for all functions are taken as 1/2 (This can be changed easily within the source code, but currently not from the tui).
 
 The ODEs are given below in LaTeX.
 
