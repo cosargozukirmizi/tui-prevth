@@ -222,47 +222,23 @@ After each change of the radioboxes, the output is updated. The calculation is p
 
 # Install instructions specific to Ubuntu and Ubuntu-like distributions
 
-Get the source of ftxui-starter by
-> wget https<span/>://github.com/ArthurSonzogni/ftxui-starter/archive/refs/heads/master.zip
+Get the source of tui-prevth by
+> wget https<span/>://github.com/cosargozukirmizi/tui-prevth/archive/refs/heads/main.zip
 
 Unzip it by
-> unzip master.zip
+> unzip main.zip
 
-Go to the directory to put the source of tui-prevth by 
-> cd ftxui-starter-master/src/
-
-Remove the current main.cpp by
-> rm main.cpp
-
-Get the main.cpp for tui-prevth by
-> wget https<span/>://raw.githubusercontent.com/cosargozukirmizi/tui-prevth/main/main.cpp
+Change into directory by
+> cd tui-prevth
 
 Install GNU Multiprecision by
-> sudo apt install libgmp-dev 
+> sudo apt install libgmp-dev
 
-Go to the directory above by
-> cd ..
+Build by 
+> cmake -B build .
 
-Add a line to CMakeLists.txt by
-> sed -i '2i set(CMAKE_CXX_STANDARD 20)' CMakeLists.txt
+Compile by
+> cd build && make
 
-Add a target link library to CMakeLists.txt by
-> sed -i '33i gmpxx' CMakeLists.txt
-
-Add another target link library to CMakeLists.txt by
-> sed -i '33i gmp' CMakeLists.txt
-
-Make a build directory by
-> mkdir build
-
-Change into the build directory by
-> cd build
-
-Then build by
-> cmake ..
-
-Then compile by
-> make -j
-
-Then run by
-> ./ftxui-starter
+Run by
+> ./a.out
