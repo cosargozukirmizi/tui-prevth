@@ -222,23 +222,16 @@ After each change of the radioboxes, the output is updated. The calculation is p
 
 # Install instructions specific to Ubuntu and Ubuntu-like distributions
 
-Get the source of tui-prevth by
-> wget https<span/>://github.com/cosargozukirmizi/tui-prevth/archive/refs/heads/main.zip
-
-Unzip it by
-> unzip main.zip
-
-Change into directory by
-> cd tui-prevth
-
 Install GNU Multiprecision by
 > sudo apt install libgmp-dev
 
-Build by 
+Build tui-prevth by 
 > cmake -B build .
 
-Compile by
+Compile tui-prevth by
 > cd build && make
 
 Run by
 > ./a.out
+
+The program has been tested with GNU compiler g++-10 and above.
