@@ -34,21 +34,61 @@ Component Window2(std::string title, Component component) {
   });
 }
 
+ButtonOption ButtonStyle() {
+  auto option = ButtonOption::Animated();
+  option.transform = [](const EntryState& s) {
+    auto element = text(s.label);
+    if (s.focused) {
+      element |= bold;
+    }
+    return element | center | borderEmpty | flex;
+  };
+  return option;
+}
 
-void extendSpace (std::string& xx, const std::vector<int>& equationVector, std::vector<mpq_class>& myCoeffs, const std::vector<mpq_class>& initVal, const int max_iter, const int f_num, const int p_prec, const int t_maxChoice);
+
+void Settings(std::vector<std::vector<mpq_class>>& vd) {
+  auto screen = ScreenInteractive::TerminalOutput();
+  auto back_button = Button("Back", screen.ExitLoopClosure());
+  auto goto_1 = Button("Add 1/2 to vdPol f0 initVal", [&vd] { (vd.at(0)).at(0)=(vd.at(0)).at(0)+mpq_class(1,2); });
+  auto goto_2 = Button("Subtract 1/2 from vdPol f0 initVal", [&vd] { (vd.at(0)).at(0)=(vd.at(0)).at(0)-mpq_class(1,2); });
+  auto goto_3 = Button("Add 1/2 to vdPol f1 initVal", [&vd] { (vd.at(0)).at(1)=(vd.at(0)).at(1)+mpq_class(1,2); });
+  auto goto_4 = Button("Subtract 1/2 from vdPol f1 initVal", [&vd] { (vd.at(0)).at(1)=(vd.at(0)).at(1)-mpq_class(1,2); });
+  auto layout = Container::Vertical({
+      back_button,
+      goto_1,
+      goto_2,
+      goto_3,
+      goto_4,
+  });
+  auto renderer = Renderer(layout, [&] {
+    return vbox({
+//               text("path: " + path),
+               separator(),
+               back_button->Render(),
+               goto_1->Render(),
+               goto_2->Render(),
+               goto_3->Render(),
+               goto_4->Render(),
+           }) |
+           border;
+  });
+  screen.Loop(renderer);
+}
+
+
+void extendSpace (std::string& xx, const std::vector<int>& equationVector, std::vector<mpq_class>& myCoeffs, std::vector<mpq_class>& initVal, const int max_iter, const int f_num, const int p_prec, const int t_maxChoice);
 void construct2F(std::vector<int>& rowInd, std::vector<int>& colInd, std::vector<mpq_class>& myValue, const std::vector<int>& runVec, const std::map<std::vector<int>, int>& myMap, const std::vector<mpq_class>& myCoeffs, const int stEq);
 void condensedKroneckerProduct(std::vector<mpq_class>& result, const std::vector<mpq_class>& a, const std::vector<mpq_class>& b);
 void sparseMatTimesVec(std::vector<mpq_class>& result, const std::vector<int>& rowInd, const std::vector<int>& colInd, const std::vector<mpq_class>& myCoeffs, const std::vector<mpq_class>& x);
-void constructAugmentedInitVal(std::vector<mpq_class>& runInitVal, const std::vector<mpq_class>& initVal, const std::map<std::vector<int>, int>& myMap);
-
-
-
+void constructAugmentedInitVal(std::vector<mpq_class>& runInitVal, std::vector<mpq_class>& initVal, const std::map<std::vector<int>, int>& myMap);
 
 
 int main() {
 
 
   auto screen = ScreenInteractive::TerminalOutput();
+  screen.TrackMouse(false);
 
   const int max_iter = 3;
 
@@ -75,7 +115,7 @@ int main() {
 
   allCoeffs.push_back(vanderPolCoeffs);
 
-  const std::vector<mpq_class> vanderPolInitVal{
+  std::vector<mpq_class> vanderPolInitVal{
    mpq_class(1,2), mpq_class(1,2)
   };
 
@@ -164,7 +204,7 @@ int main() {
 
 
 
-  int menu_selected[] = {0, 0, 0, 0, 0};
+  int menu_selected[] = {0, 0, 0, 0};
   std::vector<std::vector<std::string>> menu_entries = {
       {
           "vdPol",
@@ -181,8 +221,6 @@ int main() {
           "1",
       },
       {
-      },
-      {
           "f0",
           "f1",
       },
@@ -193,33 +231,39 @@ int main() {
       }
   };
 
-  for (int i = 3; i < 1025; i+=1)
-    menu_entries[2].push_back("" + std::to_string(i));
+  int num_iter = 3;
 
+
+  auto button_settings = Button("Settings", [&allInitVals] { Settings(allInitVals); });
+  auto button_p1 = Button("num_iter+1", [&num_iter] { num_iter = num_iter+1; });
+  auto button_m1 = Button("num_iter-1", [&num_iter] { if(num_iter>3) {num_iter = num_iter - 1;} });
+  auto button_p10 = Button("num_iter+10", [&num_iter] { num_iter = num_iter+10; });
+  auto button_m10 = Button("num_iter-10", [&num_iter] { if(num_iter>12) {num_iter = num_iter-10;} });
+  auto button_quit = Button("Quit", screen.ExitLoopClosure());
 
   auto menu_global = Container::Vertical(
       {
           Window("ODE preset", Radiobox(&menu_entries[0], &menu_selected[0])),
           Window("t_max", Radiobox(&menu_entries[1], &menu_selected[1])),
-          Window2("num_iter", Radiobox(&menu_entries[2], &menu_selected[2])),
-          Window("f_num", Radiobox(&menu_entries[3], &menu_selected[3])),
-          Window("p_prec", Radiobox(&menu_entries[4], &menu_selected[4])),
+          button_p1,
+          button_m1,
+          button_p10,
+          button_m10,
+          Window("f_num", Radiobox(&menu_entries[2], &menu_selected[2])),
+          Window("p_prec", Radiobox(&menu_entries[3], &menu_selected[3])),
+          button_settings,
+          button_quit,
       });
 
   auto info = Renderer([&] {
     std::string xx = "";
-    extendSpace (xx, allODEs[menu_selected[0]], allCoeffs[menu_selected[0]], allInitVals[menu_selected[0]], menu_selected[2]+3, menu_selected[3], menu_selected[4], menu_selected[1]);
+    extendSpace (xx, allODEs[menu_selected[0]], allCoeffs[menu_selected[0]], allInitVals[menu_selected[0]], num_iter, menu_selected[2], menu_selected[3], menu_selected[1]);
 
     return window(text("Output"),
                   vbox({
-                      text("menu_selected[0]     = " +
-                           std::to_string(menu_selected[0])),
-                      text("menu_selected[1]     = " +
-                           std::to_string(menu_selected[1])),
                       text("num_iter	= " +
-                           std::to_string(menu_selected[2]+3)),
-                      text("f_num	= " +
-                           std::to_string(menu_selected[3])),
+                           std::to_string(num_iter)),
+                      paragraph("\n"),
                       paragraph(xx),
                   })) | flex;
   });
@@ -236,7 +280,7 @@ int main() {
 }
 
 
-void extendSpace (std::string& xx, const std::vector<int>& equationVector, std::vector<mpq_class>& myCoeffs, const std::vector<mpq_class>& initVal, const int max_iter, const int f_num, const int p_prec, const int t_maxChoice)    // time value under consideration
+void extendSpace (std::string& xx, const std::vector<int>& equationVector, std::vector<mpq_class>& myCoeffs, std::vector<mpq_class>& initVal, const int max_iter, const int f_num, const int p_prec, const int t_maxChoice)    // time value under consideration
 {
   using namespace std;
 
@@ -555,7 +599,7 @@ int findPlace(const int a, const int b, const int n)
 }
 
 
-void constructAugmentedInitVal(std::vector<mpq_class>& runInitVal, const std::vector<mpq_class>& initVal, const std::map<std::vector<int>, int>& myMap)
+void constructAugmentedInitVal(std::vector<mpq_class>& runInitVal, std::vector<mpq_class>& initVal, const std::map<std::vector<int>, int>& myMap)
 {
   using namespace std;
 
