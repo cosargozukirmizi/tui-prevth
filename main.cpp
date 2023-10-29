@@ -235,11 +235,15 @@ int main() {
   int num_iter = 3;
 
 
-  auto button_settings = Button("Settings", [&allInitVals, &menu_entries, &menu_selected] { Settings(allInitVals, menu_entries, menu_selected); });
-  auto button_p1 = Button("num_iter+1", [&num_iter] { num_iter = num_iter+1; });
-  auto button_m1 = Button("num_iter-1", [&num_iter] { if(num_iter>3) {num_iter = num_iter - 1;} });
-  auto button_p10 = Button("num_iter+10", [&num_iter] { num_iter = num_iter+10; });
-  auto button_m10 = Button("num_iter-10", [&num_iter] { if(num_iter>12) {num_iter = num_iter-10;} });
+  std::string xx = "";
+
+
+  auto button_settings = Button("Settings", [&allInitVals, &menu_entries, &menu_selected] {Settings(allInitVals, menu_entries, menu_selected); });
+  auto button_p1 = Button("num_iter+1", [&num_iter] {num_iter = num_iter+1; });
+  auto button_m1 = Button("num_iter-1", [&num_iter] {  if(num_iter>3) {num_iter = num_iter - 1;} });
+  auto button_p10 = Button("num_iter+10", [&num_iter] {num_iter = num_iter+10; });
+  auto button_m10 = Button("num_iter-10", [&num_iter] {if(num_iter>12) {num_iter = num_iter-10;} });
+  auto button_run = Button("Run", [&xx, &allODEs, &allCoeffs, &allInitVals, &menu_selected, &num_iter] {xx= ""; extendSpace (xx, allODEs[menu_selected[0]], allCoeffs[menu_selected[0]], allInitVals[menu_selected[0]], num_iter, menu_selected[2], menu_selected[3], menu_selected[1]); });     
   auto button_quit = Button("Quit", screen.ExitLoopClosure());
 
   auto menu_global = Container::Vertical(
@@ -253,18 +257,18 @@ int main() {
           Window("f_num", Radiobox(&menu_entries[2], &menu_selected[2])),
           Window("p_prec", Radiobox(&menu_entries[3], &menu_selected[3])),
           button_settings,
+          button_run,
           button_quit,
       });
 
   auto info = Renderer([&] {
-    std::string xx = "";
-    extendSpace (xx, allODEs[menu_selected[0]], allCoeffs[menu_selected[0]], allInitVals[menu_selected[0]], num_iter, menu_selected[2], menu_selected[3], menu_selected[1]);
-
+//    extendSpace (xx, allODEs[menu_selected[0]], allCoeffs[menu_selected[0]], allInitVals[menu_selected[0]], num_iter, menu_selected[2], menu_selected[3], menu_selected[1]);
     return window(text("Output"),
                   vbox({
                       text("num_iter	= " +
                            std::to_string(num_iter)),
-                      paragraph("\n"),
+                      paragraph("\nPress 'Run' for the changes to take effect.\n"),
+                      separator(),
                       paragraph(xx),
                   })) | flex;
   });
