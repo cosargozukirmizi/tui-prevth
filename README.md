@@ -4,7 +4,7 @@ tui for probabilistic evolution theory solution of ordinary differential equatio
 
 This program solves the initial value problem of ordinary differential equations with multinomial right-hand-side functions. Four different initial value problems are put in the source code. The code can be manipulated to accomodate other initial value problems with multinomial right-hand-sides. 
 
-![tui-prevth](Screenshot_2023-08-22_12-21-22.png?raw=true "tui-prevth")
+![tui-prevth](Screenshot_2023-10-29_16-07-39.png?raw=true "tui-prevth")
 
 The calculations are performed using rational arithmetic. In this way, error accumulation because of finite nature of double arithmetic is avoided. 
 
