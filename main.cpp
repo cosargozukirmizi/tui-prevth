@@ -47,13 +47,14 @@ ButtonOption ButtonStyle() {
 }
 
 
-void Settings(std::vector<std::vector<mpq_class>>& vd) {
+void Settings(std::vector<std::vector<mpq_class>>& vd, std::vector<std::vector<std::string>> menu_entries, int menu_selected[]) {
   auto screen = ScreenInteractive::TerminalOutput();
   auto back_button = Button("Back", screen.ExitLoopClosure());
-  auto goto_1 = Button("Add 1/2 to vdPol f0 initVal", [&vd] { (vd.at(0)).at(0)=(vd.at(0)).at(0)+mpq_class(1,2); });
-  auto goto_2 = Button("Subtract 1/2 from vdPol f0 initVal", [&vd] { (vd.at(0)).at(0)=(vd.at(0)).at(0)-mpq_class(1,2); });
-  auto goto_3 = Button("Add 1/2 to vdPol f1 initVal", [&vd] { (vd.at(0)).at(1)=(vd.at(0)).at(1)+mpq_class(1,2); });
-  auto goto_4 = Button("Subtract 1/2 from vdPol f1 initVal", [&vd] { (vd.at(0)).at(1)=(vd.at(0)).at(1)-mpq_class(1,2); });
+  std::string odename = menu_entries[0][menu_selected[0]];
+  auto goto_1 = Button("Add 1/2 to " + odename + " f0 initVal", [&vd, menu_selected] { (vd.at(menu_selected[0])).at(0)=(vd.at(menu_selected[0])).at(0)+mpq_class(1,2); });
+  auto goto_2 = Button("Subtract 1/2 from " + odename + " f0 initVal", [&vd, menu_selected] { (vd.at(menu_selected[0])).at(0)=(vd.at(menu_selected[0])).at(0)-mpq_class(1,2); });
+  auto goto_3 = Button("Add 1/2 to " + odename + " f1 initVal", [&vd, menu_selected] { (vd.at(menu_selected[0])).at(1)=(vd.at(menu_selected[0])).at(1)+mpq_class(1,2); });
+  auto goto_4 = Button("Subtract 1/2 from "+ odename + " f1 initVal", [&vd, menu_selected] { (vd.at(menu_selected[0])).at(1)=(vd.at(menu_selected[0])).at(1)-mpq_class(1,2); });
   auto layout = Container::Vertical({
       back_button,
       goto_1,
@@ -234,7 +235,7 @@ int main() {
   int num_iter = 3;
 
 
-  auto button_settings = Button("Settings", [&allInitVals] { Settings(allInitVals); });
+  auto button_settings = Button("Settings", [&allInitVals, &menu_entries, &menu_selected] { Settings(allInitVals, menu_entries, menu_selected); });
   auto button_p1 = Button("num_iter+1", [&num_iter] { num_iter = num_iter+1; });
   auto button_m1 = Button("num_iter-1", [&num_iter] { if(num_iter>3) {num_iter = num_iter - 1;} });
   auto button_p10 = Button("num_iter+10", [&num_iter] { num_iter = num_iter+10; });
