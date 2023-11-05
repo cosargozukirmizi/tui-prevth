@@ -48,7 +48,7 @@ ButtonOption ButtonStyle() {
 
 
 void Settings(std::vector<std::vector<mpq_class>>& vd, std::vector<std::vector<std::string>> menu_entries, int menu_selected[]) {
-  auto screen = ScreenInteractive::TerminalOutput();
+  auto screen = ScreenInteractive::FitComponent();
   auto back_button = Button("Back", screen.ExitLoopClosure());
   std::string odename = menu_entries[0][menu_selected[0]];
   auto goto_1 = Button("Add 1/2 to " + odename + " f0 initVal", [&vd, menu_selected] { (vd.at(menu_selected[0])).at(0)=(vd.at(menu_selected[0])).at(0)+mpq_class(1,2); });
@@ -83,6 +83,9 @@ void construct2F(std::vector<int>& rowInd, std::vector<int>& colInd, std::vector
 void condensedKroneckerProduct(std::vector<mpq_class>& result, const std::vector<mpq_class>& a, const std::vector<mpq_class>& b);
 void sparseMatTimesVec(std::vector<mpq_class>& result, const std::vector<int>& rowInd, const std::vector<int>& colInd, const std::vector<mpq_class>& myCoeffs, const std::vector<mpq_class>& x);
 void constructAugmentedInitVal(std::vector<mpq_class>& runInitVal, std::vector<mpq_class>& initVal, const std::map<std::vector<int>, int>& myMap);
+
+
+const bool newHeuristic = 1;
 
 
 int main() {
@@ -404,28 +407,56 @@ void extendSpace (std::string& xx, const std::vector<int>& equationVector, std::
               continue;
             }
             vector<int> lefts;
-            int oneCount = 0;
 
             for (auto counter = 0; counter < stEq; counter++)
               runVec.push_back (rightHandSide[counter]);
 
-            for (vector<int>::size_type i = 0; i < myTemp.size (); ++i)
+            if (newHeuristic == 0)
             {
-              if (myTemp[i] == 1)
+              int oneCount = 0;
+
+              for (vector<int>::size_type i = 0; i < myTemp.size (); ++i)
               {
-                ++oneCount;
-              }
-              if (myTemp[i] != 1 || (myTemp[i]==1 && (oneCount%2==1)))
-              {
-                lefts.push_back(myTemp[i] / 2);
-                runVec.push_back(myTemp[i] / 2);
-              }
-              else if (myTemp[i]==1 && oneCount%2==0)
-              {
-                lefts.push_back(1);
-                runVec.push_back(1);
+                if (myTemp[i] == 1)
+                {
+                  ++oneCount;
+                }
+                if (myTemp[i] != 1 || (myTemp[i]==1 && (oneCount%2==1)))
+                {
+                  lefts.push_back(myTemp[i] / 2);
+                  runVec.push_back(myTemp[i] / 2);
+                }
+                else if (myTemp[i]==1 && oneCount%2==0)
+                {
+                  lefts.push_back(1);
+                  runVec.push_back(1);
+                }
               }
             }
+            else
+            {
+              int oddCount = 0;
+
+              for (vector<int>::size_type i = 0; i < myTemp.size (); ++i)
+              {
+                if (myTemp[i] % 2 == 1)
+                {
+                  ++oddCount;
+                }
+
+                if (myTemp[i] % 2 == 0 || (myTemp[i] % 2 == 1 && (oddCount%2 == 1)))
+                {
+                  lefts.push_back(myTemp[i] / 2);
+                  runVec.push_back(myTemp[i] / 2);
+                }
+                else if (myTemp[i] % 2 == 1 && oddCount%2 == 0)
+                {
+                  lefts.push_back( (myTemp[i]+1) / 2 );
+                  runVec.push_back( (myTemp[i]+1) / 2 );
+                }
+              }
+            }
+
             for (vector<int>::size_type i = 0; i < lefts.size (); ++i)
             {
               runVec.push_back(myTemp[i] - lefts[i]);

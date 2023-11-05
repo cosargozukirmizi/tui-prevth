@@ -4,18 +4,16 @@ tui for probabilistic evolution theory solution of ordinary differential equatio
 
 This program solves the initial value problem of ordinary differential equations with multinomial right-hand-side functions. Four different initial value problems are put in the source code. The code can be manipulated to accomodate other initial value problems with multinomial right-hand-sides. 
 
-![tui-prevth](Screenshot_2023-10-29_16-07-39.png?raw=true "tui-prevth")
+![tui-prevth](Screenshot1.png?raw=true "tui-prevth")
 
 The calculations are performed using rational arithmetic. In this way, error accumulation because of finite nature of double arithmetic is avoided. 
 
-The command line interface has five sets of input. 
-
-ODE preset is for choosing the initial value problem. The ODEs are van der Pol, quartic anharmonic oscillator, Henon-Heiles and Rabinovich-Fabrikant. All initial values for all functions are taken as 1/2 (This can be changed easily within the source code, but currently not from the tui).
+ODE preset is for choosing the initial value problem. The ODEs are van der Pol, quartic anharmonic oscillator, Henon-Heiles and Rabinovich-Fabrikant. All initial values for all functions are taken as 1/2.
 
 The ODEs are given below.
 
-## vdPol
-
+van der Pol
+-----------
 The van der Pol ODE is
 ```math
 \begin{eqnarray}
@@ -39,7 +37,7 @@ can be used to rewrite in the form
   \dot{u}^{(0,1)} &=& \frac{1}{\mu}\, u^{(0,0)} u^{(1,0)} 
 \end{eqnarray}
 ```
-using the heuristic H1 used in beam search for pure quadratization. We will take $\mu$ as 1. After pure quadratization, the ODE set is 
+using the heuristic H4 used in beam search for pure quadratization. We will take $\mu$ as 1. After pure quadratization, the ODE set is 
 ```math
 \begin{eqnarray}
   \dot{u}^{(1,0)} &=& 1\, u^{(0,0)} u^{(1,0)} 
@@ -54,8 +52,8 @@ using the heuristic H1 used in beam search for pure quadratization. We will take
 \end{eqnarray}
 ```
 
-## QuartAnhOsc
-
+Quartic anharmonic oscillator
+-----------------------------
 The Quartic anharmonic oscillator ODE is
 ```math
 \begin{eqnarray}
@@ -78,7 +76,7 @@ can be used to rewrite in the form
  &-& k_{2}\, u^{(1,0)} u^{(2,0)}\\
 \end{eqnarray}
 ```
-using the heuristic H1 used in beam search for pure quadratization. We will take $k_{1}$, $k_{2}$ and $\mu$ as 1. After pure quadratization, the ODE set is 
+using the heuristic H4 used in beam search for pure quadratization. We will take $k_{1}$, $k_{2}$ and $\mu$ as 1. After pure quadratization, the ODE set is 
 ```math
 \begin{eqnarray}
   \dot{u}^{(1,0)} &=& 1\, u^{(0,0)} u^{(0,1)}\\
@@ -89,8 +87,8 @@ using the heuristic H1 used in beam search for pure quadratization. We will take
 \end{eqnarray}
 ```
 
-## HenHeil
-
+Henon-Heiles
+------------
 The Henon-Heiles ODE is
 ```math
 \begin{eqnarray}
@@ -124,7 +122,7 @@ can be used to rewrite in the form
  &+& \lambda \, u^{(0,0,1,0)} u^{(0,0,1,0)}
 \end{eqnarray}
 ``` 
-using the heuristic H1 used in beam search for pure quadratization. We will take $\lambda$ as 1. After pure quadratization, the ODE set is 
+using the heuristic H4 used in beam search for pure quadratization. We will take $\lambda$ as 1. After pure quadratization, the ODE set is 
 ```math
 \begin{eqnarray}
   \dot{u}^{(1,0,0,0)} &=& 1\, u^{(0,0,0,0)} u^{(0,1,0,0)}\\
@@ -138,8 +136,8 @@ using the heuristic H1 used in beam search for pure quadratization. We will take
 \end{eqnarray}
 ```
 
-## RabFab
-
+Rabinovich-Fabrikant
+--------------------
 The Rabinovich-Fabrikant ODE is 
 ```math
 \begin{eqnarray}
@@ -171,40 +169,46 @@ can be used to rewrite in the form
 - 2\, u^{(0,1,0)} u^{(1,0,1)} 
 \end{eqnarray}
 ```
-using the heuristic H1 used in beam search for pure quadratization. We will take $\alpha$ and $\gamma$ as 1. After pure quadratization, the ODE set is 
+using the heuristic H4 used in beam search for pure quadratization. We will take $\alpha$ and $\gamma$ as 1. After pure quadratization, the ODE set is 
 ```math
 \begin{align}
-  \dot{u}^{(1,0,0)} &=  u^{(0,0,1)} u^{(0,1,0)} -  u^{(0,0,0)} u^{(0,1,0)} \\
-  &+  u^{(1,0,0)} u^{(1,1,0)} +  u^{(0,0,0)} u^{(1,0,0)} \\
-  \dot{u}^{(0,1,0)} &= 3 u^{(0,0,1)} u^{(1,0,0)} +  u^{(0,0,0)} u^{(1,0,0)} \\
-  &-  u^{(1,0,0)} u^{(2,0,0)} +  u^{(0,0,0)} u^{(0,1,0)} \\
-  \dot{u}^{(0,0,1)} &= -2 u^{(0,0,0)} u^{(0,0,1)} - 2 u^{(0,1,0)} u^{(1,0,1)} \\
-  \dot{u}^{(0,0,0)} &= 0 \\
-  \dot{u}^{(1,1,0)} &=  u^{(0,1,0)} u^{(0,1,1)} -  u^{(0,1,0)} u^{(0,1,0)}  \\
-  &+  u^{(1,1,0)} u^{(1,1,0)} +  u^{(0,1,0)} u^{(1,0,0)} \\ 
-  &+ 3 u^{(1,0,0)} u^{(1,0,1)} +  u^{(1,0,0)} u^{(1,0,0)}  \\
-  &-  u^{(2,0,0)} u^{(2,0,0)} +  u^{(0,1,0)} u^{(1,0,0)} \\
-  \dot{u}^{(2,0,0)} &= 2 u^{(0,1,0)} u^{(1,0,1)} - 2 u^{(0,1,0)} u^{(1,0,0)} \\
-  &+ 2 u^{(1,0,0)} u^{(2,1,0)} + 2 u^{(1,0,0)} u^{(1,0,0)} \\
-  \dot{u}^{(1,0,1)} &=  u^{(0,0,1)} u^{(0,1,1)} -  u^{(0,0,1)} u^{(0,1,0)} \\
-  &+  u^{(1,0,1)} u^{(1,1,0)} +  u^{(0,0,1)} u^{(1,0,0)} \\
-  &- 2 u^{(0,0,1)} u^{(1,0,0)} - 2 u^{(1,0,1)} u^{(1,1,0)} \\
-  \dot{u}^{(0,1,1)} &= 3 u^{(0,0,1)} u^{(1,0,1)} +  u^{(0,0,1)} u^{(1,0,0)} \\
-  &-  u^{(1,0,0)} u^{(2,0,1)} +  u^{(0,0,1)} u^{(0,1,0)} \\ 
-  &- 2 u^{(0,0,1)} u^{(0,1,0)} - 2 u^{(0,1,1)} u^{(1,1,0)}
+\dot{u}^{(1,0,0)} &= 1\, u^{(0,0,1)} u^{(0,1,0)}  \\
+ &- 1\, u^{(0,0,0)} u^{(0,1,0)}  \\
+ &+ 1\, u^{(1,0,0)} u^{(1,1,0)} \\
+ &+ 1\, u^{(0,0,0)} u^{(1,0,0)}\\
+  \dot{u}^{(0,1,0)} &= 3\, u^{(0,0,1)} u^{(1,0,0)} \\
+ &+ 1\, u^{(0,0,0)} u^{(1,0,0)}  \\
+ &- 1\, u^{(1,0,0)} u^{(2,0,0)}  \\
+ &+ 1\, u^{(0,0,0)} u^{(0,1,0)}\\
+  \dot{u}^{(0,0,1)} &= -2\, u^{(0,0,0)} u^{(0,0,1)}  \\
+ &- 2\, u^{(0,1,0)} u^{(1,0,1)}\\
+  \dot{u}^{(0,0,0)} &= 0
 \end{align}
-```
-```math
 \begin{align}
-  \dot{u}^{(2,1,0)} &= 2 u^{(0,1,1)} u^{(1,1,0)} - 2 u^{(0,1,0)} u^{(1,1,0)} \\
-  &+ 2 u^{(1,1,0)} u^{(2,1,0)} + 2 u^{(1,0,0)} u^{(1,1,0)} \\
-  &+ 3 u^{(1,0,0)} u^{(2,0,1)} +  u^{(1,0,0)} u^{(2,0,0)} \\
-  &-  u^{(2,0,0)} u^{(3,0,0)} +  u^{(1,0,0)} u^{(1,1,0)} \\
-  \dot{u}^{(2,0,1)} &= 2 u^{(0,1,1)} u^{(1,0,1)} - 2 u^{(0,1,0)} u^{(1,0,1)} \\
-  &+ 2 u^{(1,0,1)} u^{(2,1,0)} + 2 u^{(1,0,0)} u^{(1,0,1)} \\
-  &- 2 u^{(1,0,0)} u^{(1,0,1)} - 2 u^{(1,0,1)} u^{(2,1,0)} \\
-  \dot{u}^{(3,0,0)} &= 3 u^{(1,0,1)} u^{(1,1,0)} - 3 u^{(1,0,0)} u^{(1,1,0)} \\
-  &+ 3 u^{(2,0,0)} u^{(2,1,0)} + 3 u^{(1,0,0)} u^{(2,0,0)}
+  \dot{u}^{(1,1,0)} &= 1\, u^{(0,1,0)} u^{(0,1,1)}  \\
+ &- 1\, u^{(0,1,0)} u^{(0,1,0)}  \\
+ &+ 1\, u^{(1,1,0)} u^{(1,1,0)}  \\
+ &+ 1\, u^{(0,1,0)} u^{(1,0,0)}  \\
+ &+ 3\, u^{(1,0,0)} u^{(1,0,1)}  \\
+ &+ 1\, u^{(1,0,0)} u^{(1,0,0)}  \\
+ &- 1\, u^{(2,0,0)} u^{(2,0,0)}  \\
+ &+ 1\, u^{(0,1,0)} u^{(1,0,0)}\\
+  \dot{u}^{(2,0,0)} &= 2\, u^{(0,1,0)} u^{(1,0,1)}  \\
+ &- 2\, u^{(0,1,0)} u^{(1,0,0)}  \\
+ &+ 2\, u^{(1,1,0)} u^{(2,0,0)}  \\
+ &+ 2\, u^{(1,0,0)} u^{(1,0,0)}\\
+  \dot{u}^{(1,0,1)} &= 1\, u^{(0,0,1)} u^{(0,1,1)}  \\
+ &- 1\, u^{(0,0,1)} u^{(0,1,0)}  \\
+ &+ 1\, u^{(1,0,1)} u^{(1,1,0)}  \\
+ &+ 1\, u^{(0,0,1)} u^{(1,0,0)}  \\
+ &- 2\, u^{(0,0,1)} u^{(1,0,0)}  \\
+ &- 2\, u^{(1,0,1)} u^{(1,1,0)}\\
+  \dot{u}^{(0,1,1)} &= 3\, u^{(0,0,1)} u^{(1,0,1)}  \\
+ &+ 1\, u^{(0,0,1)} u^{(1,0,0)}  \\
+ &- 1\, u^{(1,0,1)} u^{(2,0,0)}  \\
+ &+ 1\, u^{(0,0,1)} u^{(0,1,0)}  \\
+ &- 2\, u^{(0,0,1)} u^{(0,1,0)}  \\
+ &- 2\, u^{(0,1,1)} u^{(1,1,0)}
 \end{align}
 ```
 
@@ -218,7 +222,7 @@ f_num determines the function for which the solution will be given. There are on
 
 p_prec is the printing precision. All calculations are performed in exact arithmetic. The rational number is converted to floating point number at the last step using very high number of bits for representation (using facilities of multiprecision library). The printing precision determines how many digits to print after the dot.
 
-After each change of the radioboxes, the output is updated. The calculation is performed from scratch for each change to give a realistic observation of the computation time of prevth. Therefore, even the pure quadratization is performed again for each change of the radioboxes. 
+When the Run button is pressed, the output is updated. The calculation is performed from scratch for each run to give a realistic observation of the computation time of prevth. Therefore, even the pure quadratization is performed again for each run. 
 
 # Install instructions specific to Ubuntu and Ubuntu-like distributions
 
@@ -234,4 +238,4 @@ Compile tui-prevth by
 Run by
 > ./a.out
 
-The program has been tested with GNU compiler g++-10 and above.
+The program has been tested to work with GNU compiler g++-10 and above.
