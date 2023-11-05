@@ -184,6 +184,8 @@ using the heuristic H4 used in beam search for pure quadratization. We will take
  &- 2\, u^{(0,1,0)} u^{(1,0,1)}\\
   \dot{u}^{(0,0,0)} &= 0
 \end{align}
+```
+```math
 \begin{align}
   \dot{u}^{(1,1,0)} &= 1\, u^{(0,1,0)} u^{(0,1,1)}  \\
  &- 1\, u^{(0,1,0)} u^{(0,1,0)}  \\
